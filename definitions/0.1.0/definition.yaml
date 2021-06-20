@@ -1,0 +1,18 @@
+---
+runtime: shell
+code: |
+ export statusCode=${var.rm-gitlab-api-token}${var.rm-jira-username}${var.rm-jira-password}
+inputProperties:
+  - name: message
+    type: text
+    title: Message
+    placeHolder: Message for Slack Channel
+    defaultValue: Hello Slack
+    bindable: true
+    labelInfo: true
+    labelMessage: This message would be posted to the channel whose link is provided in the code
+
+outputProperties:
+  - name: statusCode
+    type: label
+    title: Status Code
