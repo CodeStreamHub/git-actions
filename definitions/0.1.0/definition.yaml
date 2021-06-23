@@ -1,18 +1,186 @@
 ---
 runtime: shell
 code: |
- export statusCode=${var.rm-gitlab-api-token}${var.rm-jira-username}${var.rm-jira-password}
+  /app/scm-actions "$cloneUrls" "$cloneUsernames" "$clonePasswords" "$action" "$actionOn" "$values" "$checkoutType" "$checkoutValues" "$tagsMessagesToAdd" "$reposInputForDiff" "$repoTypeForDiff" "$apiTokens" "$isMirrored" "$mirrorCloneUrls" "$mirrorCloneUsernames" "$mirrorClonePasswords"
+    source /app/output.txt
+    export $(cut -d= -f1 /app/output.txt)
 inputProperties:
-  - name: message
-    type: text
-    title: Message
-    placeHolder: Message for Slack Channel
-    defaultValue: Hello Slack
+  - name: cloneUrls
+    type: textarea
+    title: Repos Clone URLs
+    placeHolder: Repos Clone URLs
+    defaultValue: ""
     bindable: true
     labelInfo: true
-    labelMessage: This message would be posted to the channel whose link is provided in the code
-
+    labelMessage: Semicolon separated clone urls
+  - name: cloneUsernames
+    type: textarea
+    title: Repos Clone Usernames
+    placeHolder: Repos Clone Usernames
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated usernames to clone repos.
+  - name: clonePasswords
+    type: textarea
+    title: Repos Clone Passwords
+    placeHolder: Repos Clone Passwords
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated passwords to clone repos.
+  - name: action
+    type: select
+    title: Action name
+    placeHolder: Action name
+    defaultValue: 
+    bindable: true
+    labelInfo: true
+    labelMessage:
+    options:
+       - optionKey : create
+         optionValue : Create
+       - optionKey : rewrite
+         optionValue : Rewrite
+       - optionKey : delete
+         optionValue : Delete
+       - optionKey : diff
+         optionValue : Diff
+       - optionKey : get
+         optionValue : Get
+  - name: actionOn
+    type: select
+    title: Action on
+    placeHolder: Action on
+    defaultValue: 
+    bindable: true
+    labelInfo: true
+    labelMessage:
+    options:
+       - optionKey : branches
+         optionValue : Branches
+       - optionKey : tags
+         optionValue : Tags
+       - optionKey : commits
+         optionValue : Commits
+  - name: values
+    type: textarea
+    title: Values
+    placeHolder: Values
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated values of the selected action on field. 
+  - name: checkoutType
+    type: textarea
+    title: Checkout Type
+    placeHolder: Checkout Type, It can have values 1. branch, 2. tag, 3. commit, 4. branch and commit, 5. branch and tag
+    defaultValue: 
+    bindable: true
+    labelInfo: true
+    labelMessage: Checkout Type will be used to checkout the repo as per the selection.
+    options:
+       - optionKey : branch
+         optionValue : Branch
+       - optionKey : tag
+         optionValue : Tag
+       - optionKey : commit
+         optionValue : Commit
+       - optionKey : branch and commit
+         optionValue : Branch and Commit
+       - optionKey : branch and tag
+         optionValue : Branch and Tag
+  - name: checkoutValues
+    type: textarea
+    title: Checkout Values For Type
+    placeHolder: checkoutValues
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated values of the selected checkout type. Example values to put on selection of some of the types.                                                                 For checkout type, branch ---> master;main;feature.                                               For checkout type, branch and commit ---> master~12344nfndind;main~chdjdkdkdk.
+      similarly for other types.
+  - name: tagsMessagesToAdd
+    type: textarea
+    title: Tags Messages To add
+    placeHolder: Tags Messages To add
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated values of the tag messages to be used while tagging.
+  - name: repoTypeForDiff
+    type: select
+    title: Repo Type
+    placeHolder: Repo Type
+    defaultValue:
+    bindable: true
+    labelInfo: true
+    labelMessage: Type of SCM
+    options:
+       - optionKey : BITBUCKET
+         optionValue : BITBUCKET
+       - optionKey : GITHUB
+         optionValue : GITHUB
+       - optionKey : GITLAB
+         optionValue : GITLAB
+       - optionKey : P4V
+         optionValue : P4V
+       - optionKey : NA
+         optionValue : NA
+  - name: apiTokens
+    type: textarea
+    title: API Tokens
+    placeHolder: API Tokens
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated api tokens to be used to query above selected repo type. This can be added to codestream variables and can be used here using variable bindings ($var.sample).
+  - name: reposInputForDiff
+    type: textarea
+    title: Repos Input
+    placeHolder: subtype1~repo;subtype2~repo2
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Combinations of subtype~repo separated by semiSemicolon. For e.g. in case of gitlab subtype will be the gitlab group name and repo will be the repo name. 
+  - name: isMirrored
+    type: textarea
+    title: Is Mirrored
+    placeHolder: Is Mirrored
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated true/false as per the repo having mirror.
+  - name: mirrorCloneUrls
+    type: textarea
+    title: Repos Mirror Clone URLs
+    placeHolder: Repos Mirror Clone URLs
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated mirror clone urls
+  - name: mirrorCloneUsernames
+    type: textarea
+    title: Repos Mirror Clone Usernames
+    placeHolder: Repos Mirror Clone Usernames
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated usernames to clone mirror repos.
+  - name: mirrorClonePasswords
+    type: textarea
+    title: Repos Mirror Clone Passwords
+    placeHolder: Repos Mirror Clone Passwords
+    defaultValue: ""
+    bindable: true
+    labelInfo: true
+    labelMessage: Semicolon separated passwords to clone mirror repos.
 outputProperties:
-  - name: statusCode
+  - name: output
     type: label
-    title: Status Code
+    title: Output
+  - name: outputHTML
+    type: label
+    title: Output HTML
+  - name: outputPrettyText
+    type: label
+    title: Output Pretty Text
