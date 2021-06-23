@@ -57,7 +57,7 @@ stages:
         type: Custom
         input:
           name: GIT Actions
-          version: 0.7.0-beta
+          version: 0.1.0
           properties:
             action: diff
             actionOn: commits
