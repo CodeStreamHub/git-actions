@@ -62,7 +62,7 @@ stages:
         type: Custom
         input:
           name: GIT Actions
-          version: 0.7.0-beta
+          version: 0.1.0
           properties:
             cloneUrls: ${input.REPOS_CLONE_URLS}
             cloneUsernames: ${input.REPOS_CLONE_USERNAMES}
